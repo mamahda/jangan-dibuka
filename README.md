@@ -1,4 +1,4 @@
-# MINI CHALLENGE – Bash File Database Manager (Revised)
+# CLI File Database Manager 
 
 ## Tujuan
 
