@@ -139,7 +139,7 @@ crontab
 Log yang dicatat:
 
 ```
-[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, activity.log, or crontabs)
+[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, or activity.log)
 ```
 
 ---
