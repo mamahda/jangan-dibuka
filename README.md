@@ -93,8 +93,6 @@ Fungsi:
 * Membaca seluruh file dalam folder `assets/`
 * Jika file ada di folder tetapi belum ada di database → tambahkan
 * Jika file ada di database tetapi sudah tidak ada di folder → hapus
-* Tidak mereset seluruh database
-* Mencatat setiap perubahan ke log
 
 ---
 
@@ -105,6 +103,7 @@ Fungsi:
 ./script.sh list --sort=name
 ./script.sh list --sort=size
 ./script.sh list --ext=png
+./script.sh list --ext=png --sort=name
 ```
 
 Fungsi:
@@ -121,13 +120,6 @@ Fungsi:
 Ketentuan:
 
 * Sorting dan filtering boleh digabung
-* Jika tidak ada hasil → tampilkan pesan sesuai
-
-Contoh:
-
-```
-./script.sh list --ext=png --sort=size
-```
 
 ---
 
@@ -202,34 +194,7 @@ Fungsi:
 
 ---
 
-## 6. AUTOSYNC
-
-```
-./script.sh autosync
-```
-
-Fungsi:
-
-* Membuat file `crontabs`
-* Menambahkan konfigurasi untuk menjalankan:
-
-```
-./script.sh sync
-```
-
-setiap 5 menit
-
-* Menginstall dengan:
-
-```
-crontab crontabs
-```
-
-* Logging instalasi
-
----
-
-# 7. LOGGING SYSTEM
+## 6. LOGGING SYSTEM
 
 Semua perintah wajib mencatat aktivitas ke:
 
@@ -248,18 +213,127 @@ LEVEL:
 * INFO
 * ERROR
 
-Contoh:
+---
+
+### 1. SYSTEM
+
+Jika komponen penting tidak ditemukan:
 
 ```
-[2026-02-26 14:32:10] [INFO] [SYNC] Added new file report.pdf
-[2026-02-26 14:35:01] [ERROR] [CREATE] File already exists
+assets/
+metadata.csv
+activity.log
+crontab
+```
+
+Log yang dicatat:
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, activity.log, or crontabs)
+```
+
+---
+
+### 2. SYNC
+
+**File baru ditemukan**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [SYNC] Added new file <filename>
+```
+
+**File hilang dibersihkan dari database**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [SYNC] Removed missing file <filename> from database
+```
+
+---
+
+### 3. LIST
+
+**Berhasil menampilkan database**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [LIST] Displayed database content
+```
+
+**Hasil filter kosong**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [LIST] Query returned empty result
+```
+
+---
+
+### 4. STATS
+
+**Statistik berhasil dibuat**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [STATS] Generated statistics
+```
+
+**Database kosong**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [STATS] Accessed empty database
+```
+
+---
+
+### 5. CREATE
+
+**Argumen kurang**
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [CREATE] Missing arguments
+```
+
+**Size tidak valid**
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [CREATE] Invalid size: <size>
+```
+
+**File sudah ada**
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [CREATE] File <filename> already exists
+```
+
+**File berhasil dibuat**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [CREATE] Created file <filename> (<size> bytes)
+```
+
+---
+
+### 6. DELETE
+
+**Tidak ada filename**
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [DELETE] No filename provided
+```
+
+**File tidak ditemukan**
+
+```
+[YYYY-MM-DD HH:MM:SS] [ERROR] [DELETE] <filename> not found
+```
+
+**File berhasil dihapus**
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [DELETE] Deleted <filename>
 ```
 
 Ketentuan:
 
 * Semua error wajib dicatat
 * Minimal satu log untuk setiap perintah
-* Logging dibuat dalam function terpisah
 
 ---
 

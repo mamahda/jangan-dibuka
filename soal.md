@@ -1,86 +1,118 @@
-## GAME ASSET MANAGER
+# GAME ASSET MANAGER
 
-Studio Game "gamelove" membutuhkan alat bantu CLI untuk mengelola ribuan aset (gambar, suara, model 3D) yang tersimpan di folder `assets/`. Kamu sebagai *Tools Engineer* ditugaskan membangun `script.sh` untuk memastikan sinkronisasi data antara folder fisik dan database metadata `metadata.csv`.
+Studio game **Gamelove** sedang mengembangkan beberapa game baru. Seiring berkembangnya proyek, jumlah aset game seperti **gambar, suara, dan model 3D** di folder `assets/` meningkat hingga ratusan file.
+
+Masalah mulai muncul.
+
+Beberapa file ada di folder tetapi **tidak tercatat di database**, sementara sebagian metadata masih tersimpan meskipun **file fisiknya sudah hilang**. Akibatnya tim developer kesulitan melacak aset yang sebenarnya digunakan dalam proyek.
+
+Untuk mengatasi masalah ini, kamu ditunjuk sebagai **Tools Engineer** untuk membuat sebuah **Command Line Interface (CLI)** bernama:
+
+```
+script.sh
+```
+
+Tool ini akan berfungsi sebagai **Game Asset Manager**, yang menjaga sinkronisasi antara folder aset fisik dan database metadata `metadata.csv`.
 
 ---
 
-## A. Fitur Sinkronisasi (SYNC)
+# A. Sinkronisasi (SYNC)
 
-Fungsi `sync` menjaga konsistensi antara folder `assets/` dan `metadata.csv`.
+Fitur `sync` bertugas memastikan **folder aset dan database metadata selalu konsisten**.
 
-1. **Detect New Files**
-   Jika ada file baru di folder yang belum terdaftar di CSV, tambahkan baris baru dengan format:
-   `filename,size,extension,created_at`.
+### 1. Detect New Files
 
-2. **Clean Up**
-   Jika ada entri di CSV yang file fisiknya sudah dihapus dari folder, hapus baris tersebut dari database.
+Jika terdapat file baru di folder `assets/` yang **belum tercatat di `metadata.csv`**, maka sistem harus otomatis menambahkan metadata baru dengan format:
+
+```
+filename,size,extension,created_at
+```
+
+
+### 2. Clean Up
+
+Jika terdapat entri pada `metadata.csv` tetapi **file fisiknya sudah tidak ada di folder `assets/`**, maka entri tersebut harus **dihapus dari database**.
 
 ---
 
-## B. Fitur Monitoring (LIST & STATS)
+# B. List
 
-### 1. List
+Perintah `list` menampilkan isi database dalam bentuk **tabel**.
 
-Menampilkan isi database dalam bentuk tabel dengan dukungan:
+Fitur tambahan:
 
-* `--sort=name` → urut alfabet
-* `--sort=size` → urut berdasarkan ukuran
-* `--ext=<extension>` → filter berdasarkan ekstensi (misalnya `.png`)
+* `--sort=name` → mengurutkan berdasarkan nama file
+* `--sort=size` → mengurutkan berdasarkan ukuran file
+* `--ext=<extension>` → menampilkan hanya file dengan ekstensi tertentu
 
-### 2. Asset Statistics
+Contoh:
 
-Menampilkan ringkasan data:
+```
+./script.sh list --sort=size
+./script.sh list --ext=png
+./script.sh list --ext=png --sort=size
+```
+
+---
+
+# C. Statistics
+
+Perintah `stats` menampilkan ringkasan statistik aset yang tersimpan di database, meliputi:
 
 * Total jumlah aset
-* Total ukuran (bytes)
+* Total ukuran seluruh aset (bytes)
 * Rata-rata ukuran aset
-* Aset terbesar dan terkecil
+* Aset terbesar
+* Aset terkecil
 * Jumlah file berdasarkan ekstensi
 
 ---
 
-## C. Fitur Manajemen Aset (CREATE & DELETE)
+# D. Manajemen Aset (CREATE & DELETE)
 
-### 1. Mock Asset Creation
+Selain monitoring, tool ini juga memungkinkan **pengelolaan aset secara langsung dari CLI**.
 
-Perintah:
-
-```
-create <filename> <size>
-```
-
-* Membuat file dummy di folder `assets/`
-* Otomatis menambahkan metadata ke database
-
-### 2. Asset Removal
+## 1. Mock Asset Creation
 
 Perintah:
 
 ```
-delete <filename>
+./script.sh create <filename> <size>
 ```
 
-* Menghapus file fisik
-* Menghapus entri metadata dari database
+Fungsi:
 
-### 3. Validation
+* Membuat file dummy pada folder `assets/`
+* Ukuran file mengikuti parameter `<size>`
+* Secara otomatis menambahkan metadata ke `metadata.csv`
 
-* Validasi jika file sudah ada saat `create`
-* Validasi jika file tidak ditemukan saat `delete`
+
+## 2. Asset Removal
+
+Perintah:
+
+```
+./script.sh delete <filename>
+```
+
+Fungsi:
+
+* Menghapus file fisik dari folder `assets/`
+* Menghapus metadata file tersebut dari database
 
 ---
 
-## D. Fitur Otomasi (AUTOSYNC)
+# E. Sistem Logging (LOG)
 
-Fungsi `autosync` akan menjalankan perintah `sync` setiap 5 menit menggunakan `crontab`.
+Seluruh aktivitas sistem harus dicatat dalam file:
+
+```
+activity.log
+```
 
 ---
 
-## E. Sistem Logging (LOG)
-
-Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
-
-### Format Log
+## Format Log
 
 ```
 [YYYY-MM-DD HH:MM:SS] [LEVEL] [COMMAND] message
@@ -88,7 +120,18 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### SYSTEM
+### 1. SYSTEM
+
+Jika komponen penting tidak ditemukan:
+
+```
+assets/
+metadata.csv
+activity.log
+crontab
+```
+
+Log yang dicatat:
 
 ```
 [YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, activity.log, or crontabs)
@@ -96,9 +139,9 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### SYNC
+### 2. SYNC
 
-**File baru terdeteksi**
+**File baru ditemukan**
 
 ```
 [YYYY-MM-DD HH:MM:SS] [INFO] [SYNC] Added new file <filename>
@@ -112,7 +155,7 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### LIST
+### 3. LIST
 
 **Berhasil menampilkan database**
 
@@ -128,7 +171,7 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### STATS
+### 4. STATS
 
 **Statistik berhasil dibuat**
 
@@ -144,7 +187,7 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### CREATE
+### 5. CREATE
 
 **Argumen kurang**
 
@@ -172,7 +215,7 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 
 ---
 
-### DELETE
+### 6. DELETE
 
 **Tidak ada filename**
 
@@ -192,12 +235,3 @@ Sistem logging mencatat seluruh aktivitas ke dalam `activity.log`.
 [YYYY-MM-DD HH:MM:SS] [INFO] [DELETE] Deleted <filename>
 ```
 
----
-
-### AUTOSYNC
-
-**Autosync berhasil dipasang**
-
-```
-[YYYY-MM-DD HH:MM:SS] [INFO] [AUTOSYNC] Installed autosync every 5 minutes
-```
