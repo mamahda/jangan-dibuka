@@ -28,6 +28,11 @@ Jika terdapat file baru di folder `assets/` yang belum tercatat di `metadata.csv
 filename,size,extension,created_at
 ```
 
+contoh:
+```
+foto.svg,482,svg,2026-03-01_04:28:40
+```
+
 
 ### 2. Clean Up
 
