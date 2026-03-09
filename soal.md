@@ -1,6 +1,6 @@
 # GAME ASSET MANAGER
 
-Studio game Gamelove sedang mengembangkan beberapa game baru. Seiring berkembangnya proyek, jumlah aset game seperti gambar, suara, dan model 3D di folder `assets/` meningkat hingga ratusan file.
+Studio game **Gamelove** sedang mengembangkan beberapa game baru. Seiring berkembangnya proyek, jumlah aset game seperti gambar, suara, dan model 3D di folder `assets/` meningkat hingga ratusan file.
 
 Masalah mulai muncul.
 
@@ -18,7 +18,7 @@ Tool ini akan berfungsi sebagai Game Asset Manager, yang menjaga sinkronisasi an
 
 ## A. Sinkronisasi (SYNC)
 
-Fitur `sync` bertugas memastikan folder aset dan database metadata selalu konsisten.
+Perintah `sync` bertugas memastikan folder aset dan database metadata selalu konsisten.
 
 ### 1. Detect New Files
 
@@ -29,14 +29,18 @@ filename,size,extension,created_at
 ```
 
 contoh:
-```
-foto.svg,482,svg,2026-03-01_04:28:40
-```
 
+```
+vector.svg,482,svg,2026-03-01_04:28:40
+```
 
 ### 2. Clean Up
 
 Jika terdapat entri pada `metadata.csv` tetapi file fisiknya sudah tidak ada di folder `assets/`, maka entri tersebut harus dihapus dari database.
+
+### 3. Automation
+
+Perintah `autosync` akan menjalankan perintah `sync` setiap 5 menit menggunakan `crontab`. Jika autosync sudah terpasang, tidak boleh menambahkan entry baru lagi.
 
 ---
 
@@ -88,9 +92,8 @@ Perintah:
 Fungsi:
 
 - Membuat file dummy pada folder `assets/`
-- Ukuran file mengikuti parameter `<size>`
+- Ukuran file mengikuti parameter `<size>` dalam bytes
 - Secara otomatis menambahkan metadata ke `metadata.csv`
-
 
 ### 2. Asset Removal
 
@@ -133,13 +136,13 @@ Jika komponen penting tidak ditemukan:
 assets/
 metadata.csv
 activity.log
-crontab
+crontabs
 ```
 
 Log yang dicatat:
 
 ```
-[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, or activity.log)
+[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, activity.log, or crontabs)
 ```
 
 ---
@@ -156,6 +159,18 @@ File hilang dibersihkan dari database
 
 ```
 [YYYY-MM-DD HH:MM:SS] [INFO] [SYNC] Removed missing file <filename> from database
+```
+
+Automation dijalankan
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [AUTOSYNC] Installed autosync every 5 minutes
+```
+
+Cronjob sudah ada
+
+```
+[YYYY-MM-DD HH:MM:SS] [INFO] [AUTOSYNC] Autosync already installed
 ```
 
 ---
@@ -239,3 +254,7 @@ File berhasil dihapus
 ```
 [YYYY-MM-DD HH:MM:SS] [INFO] [DELETE] Deleted <filename>
 ```
+
+<br>
+<br>
+Good Luck All 😆
