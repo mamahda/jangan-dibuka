@@ -40,7 +40,9 @@ Jika terdapat entri pada `metadata.csv` tetapi file fisiknya sudah tidak ada di 
 
 ### 3. Automation
 
-Perintah `autosync` akan menjalankan perintah `sync` setiap 5 menit menggunakan `crontab`. Jika autosync sudah terpasang, tidak boleh menambahkan entry baru lagi.
+Jalankan perintah `sync` setiap 5 menit menggunakan `crontab`. Jika autosync sudah terpasang, tidak boleh menambahkan entry baru lagi.
+
+Tuliskan konfigurasi cronjob kalian pada file `crontabs`.
 
 ---
 
@@ -136,13 +138,12 @@ Jika komponen penting tidak ditemukan:
 assets/
 metadata.csv
 activity.log
-crontabs
 ```
 
 Log yang dicatat:
 
 ```
-[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, activity.log, or crontabs)
+[YYYY-MM-DD HH:MM:SS] [ERROR] [SYSTEM] Missing components (assets/, metadata.csv, or activity.log)
 ```
 
 ---
@@ -258,3 +259,4 @@ File berhasil dihapus
 <br>
 <br>
 Good Luck All 😆
+
