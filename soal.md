@@ -162,18 +162,6 @@ File hilang dibersihkan dari database
 [YYYY-MM-DD HH:MM:SS] [INFO] [SYNC] Removed missing file <filename> from database
 ```
 
-Automation dijalankan
-
-```
-[YYYY-MM-DD HH:MM:SS] [INFO] [AUTOSYNC] Installed autosync every 5 minutes
-```
-
-Cronjob sudah ada
-
-```
-[YYYY-MM-DD HH:MM:SS] [INFO] [AUTOSYNC] Autosync already installed
-```
-
 ---
 
 #### 3. LIST
@@ -259,4 +247,3 @@ File berhasil dihapus
 <br>
 <br>
 Good Luck All 😆
-
