@@ -310,7 +310,6 @@ delete_asset() {
 #
 # Mengatur command CLI:
 # ./script.sh sync
-# ./script.sh autosync
 # ./script.sh list
 # ./script.sh stats
 # ./script.sh create
@@ -318,9 +317,6 @@ delete_asset() {
 case "$1" in
     sync)
         sync_assets
-        ;;
-    autosync)
-        install_autosync
         ;;
     list)
         shift
