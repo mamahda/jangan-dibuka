@@ -40,9 +40,7 @@ Jika terdapat entri pada `metadata.csv` tetapi file fisiknya sudah tidak ada di 
 
 ### 3. Automation
 
-Jalankan perintah `sync` setiap 5 menit menggunakan `crontab`. Jika autosync sudah terpasang, tidak boleh menambahkan entry baru lagi.
-
-Tuliskan konfigurasi cronjob kalian pada file `crontabs`.
+Jalankan perintah `sync` setiap 5 menit menggunakan `crontab`. Tuliskan konfigurasi cronjob kalian pada file `crontabs`.
 
 ---
 
